@@ -51,6 +51,26 @@ pub-get-users(){
 mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME -e "SELECT id, user_login, user_email, user_registered, user_status FROM wp_users" 2> /dev/null
 }
 
+pub-reset-password(){
+user=$1
+password=$2
+if [ -z "$user" ]; then show-message "Error: Username required."; exit; fi
+if [ -z "$password" ]; then show-message "Error: PAssword required."; exit; fi
+mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME -e "UPDATE wp_users SET user_status = md5($password) WHERE user_login = '$user'" 2> /dev/null
+}
+
+pub-disable-user(){
+user=$1
+if [ -z "$user" ]; then show-message "Error: Username required."; exit; fi
+mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME -e "UPDATE wp_users SET user_status = 0 WHERE user_login = '$user'" 2> /dev/null
+}
+
+pub-enable-user(){
+user=$1
+if [ -z "$user" ]; then show-message "Error: Username required."; exit; fi
+mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME -e "UPDATE wp_users SET user_status = 1 WHERE user_login = '$user'" 2> /dev/null
+}
+
 show-help(){
 echo 
 echo "Available Parameters:"
@@ -61,7 +81,18 @@ db-import [source_file_path.sql]
 
 set-urls [url] (set siteurl and home in wp_options)
 
-get-urls (Display siteurl and home in wp_options)"
+get-urls (Display siteurl and home in wp_options)
+
+get-users (Display list of users in wp_users)
+
+disable-user [user_name] (Disable user to prevent access)
+
+enable-user [user_name] (Enable user to allow access)
+
+reset-password [user_name] [new_password] (Reset user password)
+"
+
+
 echo
 }
 
