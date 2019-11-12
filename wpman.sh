@@ -10,7 +10,7 @@ then
     exit
 fi
 
-config_blob=$(grep -i "^define.*);$" wp-config.php | sed -e "s/ //g" | sed -e "s/\",\"/','/g" | sed -e "s/^[\"']//g" -e "s/'*\"*);$//g" | sed -e "s/^define(['\"]//g")
+config_blob=$(grep -i "^define.*);$" wp-config.php | sed -e "s/ //g" | sed -e "s/\",\"/','/g" | sed -e "s/^[\"']//g" -e "s/'*\"*);$//g" | sed -e "s/^define(['\"]//g" | sed -e 's/,"/,'"'"'/g' | sed -e 's/",/'"'"',/g')
 for conf in $config_blob
 do
     var_name=$(echo $conf | awk -F"','*" '{ print $1 }')
