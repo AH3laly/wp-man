@@ -1,6 +1,6 @@
 #!/bin/bash
 # WordPress Management Tool
-# Abd0M0hamed github.com/abd0m0hamed
+# Abdelrahman Helaly github.com/AHelaly
 
 parse-config(){
 
